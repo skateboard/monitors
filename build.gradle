@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+group 'me.scrim'
+version '1.0'
+
+repositories {
+    mavenCentral()
+
+    jcenter()
+}
+
+configurations {
+    shaded
+
+    compile.extendsFrom shaded
+}
+
+dependencies {
+    shaded 'com.google.code.gson:gson:+'
+    shaded 'club.minnced:discord-webhooks:+'
+    shaded 'org.jsoup:jsoup:+'
+    shaded 'com.squareup.okhttp3:okhttp:+'
+    shaded 'net.dv8tion:JDA:+'
+    shaded 'io.sentry:sentry:+'
+
+
+    shaded 'org.projectlombok:lombok:+'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+}
+
+shadowJar {
+    configurations = [project.configurations.shaded]
+}
+
+build {
+    dependsOn shadowJar
+}
+
+jar {
+    manifest {
+        attributes("Main-Class": "Main")
+    }
+}
