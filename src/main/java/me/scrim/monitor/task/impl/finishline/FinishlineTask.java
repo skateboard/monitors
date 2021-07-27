@@ -6,7 +6,7 @@ import io.sentry.Sentry;
 import io.sentry.SentryLevel;
 import me.scrim.monitor.discord.utils.DiscordEmbeds;
 import me.scrim.monitor.request.JsonReader;
-import me.scrim.monitor.task.Task;
+import me.scrim.monitor.task.AbstractTask;
 import me.scrim.monitor.task.impl.finishline.product.FinishlineProduct;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -15,8 +15,13 @@ import okhttp3.Response;
  * @author Brennan
  * @since 7/26/2021
  **/
-public class FinishlineTask extends Task {
+public class FinishlineTask extends AbstractTask {
     private final String color;
+
+    private FinishlineProduct cachedProduct;
+    private FinishlineProduct reloadProduct;
+
+    private int lastUpdateIndex = 0;
 
     public FinishlineTask(String sku, String color) {
         super(String.format("https://prodmobloy2.finishline.com/api/products/%s", sku));
@@ -28,13 +33,56 @@ public class FinishlineTask extends Task {
         addHeader("Content-Type", "application/json; charset=utf-8");
         addHeader("x-Banner", "FINL");
         addHeader("User-Agent", "Finish Line/2.7.3  (Android 2.7.3; Build/2.7.3)");
+
+        this.cachedProduct = findProduct();
+
+        if(cachedProduct == null) {
+            Sentry.captureMessage("Finishline Task [" + getId() + "] Failed to grab initial product!", SentryLevel.DEBUG);
+
+            setStarted(false);
+            return;
+        }
+        this.lastUpdateIndex = cachedProduct.getSizes().size();
+        setStarted(true);
     }
 
     @Override
     public void run() {
+        while (isStarted()) {
+            if(cachedProduct != null) {
+                reloadProduct = findProduct();
+
+                if(reloadProduct != null) {
+                    reloadProduct.addSize(new FinishlineProduct.Size("s", "s", 4));
+                    if(lastUpdateIndex != reloadProduct.getSizes().size()) {
+                        DiscordEmbeds.sendEmbeds(reloadProduct,
+                                "https://discord.com/api/webhooks/869519299998531585/IVsinhLZEsBK2BcIqWPF4eGiJmKtKaMNPGxxnW5t8-nH0h-Vuj7UFjaKYQCyn-fp3Aa3");
+                        //ScrimMonitors.INSTANCE.getRedis().sendWebhooks("hehe");
+
+                        Sentry.setTag("type", "successful_webhooks");
+                        Sentry.captureMessage("Finishline [" + getId() + "] Successfully sent webhooks!", SentryLevel.INFO);
+                    } else {
+                        continuousNoRestocks++;
+                    }
+
+                    updateCache(reloadProduct);
+                    reloadProduct = null;
+
+                    sleep(continuousNoRestocks > 7 ? 3000 : 500);
+                }
+            }
+        }
+    }
+
+    private void updateCache(FinishlineProduct product) {
+        this.cachedProduct = product;
+        this.lastUpdateIndex = product.getSizes().size();
+    }
+
+    private FinishlineProduct findProduct() {
         try {
             final Request request = new Request.Builder()
-                    .url(getWebsiteURL())
+                    .url(getWebsiteUrl())
                     .headers(getHeaders())
                     .get()
                     .build();
@@ -64,7 +112,7 @@ public class FinishlineTask extends Task {
                                 final String color = colorObject.get("colorDescription").getAsString();
 
                                 product.setImage(image);
-                                product.setPrice(colorObject.get("salePriceCents").getAsInt());
+                                product.setPrice(colorObject.get("salePriceCents").getAsString());
                                 product.setColor(color);
                                 product.setProductUrl(colorObject.get("styleId").getAsString(), colorObject.get("colorId").getAsString());
 
@@ -80,13 +128,18 @@ public class FinishlineTask extends Task {
                                     }
                                 }
 
-                                DiscordEmbeds.sendEmbeds(product,
-                                        "https://discord.com/api/webhooks/869519299998531585/IVsinhLZEsBK2BcIqWPF4eGiJmKtKaMNPGxxnW5t8-nH0h-Vuj7UFjaKYQCyn-fp3Aa3");
+
+                                return product;
                             }
                         }
                     }
                     case 400 -> {
 
+                    }
+                    case 403 -> {
+                        continuousBans++;
+                        System.out.println("Banned Proxy (rotate)");
+                        return findProduct();
                     }
                     default -> {
                         Sentry.captureMessage("Finishline Task [" + getId() + "] Unknown response code! " + responseCode, SentryLevel.DEBUG);
@@ -97,5 +150,7 @@ public class FinishlineTask extends Task {
         } catch (Exception e) {
             Sentry.captureMessage("Finishline Task [" + getId() + "] " + e.getMessage(), SentryLevel.ERROR);
         }
+
+        return null;
     }
 }

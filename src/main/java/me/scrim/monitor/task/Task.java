@@ -1,36 +1,25 @@
 package me.scrim.monitor.task;
 
-import lombok.Getter;
-import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-
-import java.util.UUID;
-
 /**
  * @author Brennan
- * @since 7/26/2021
+ * @since 7/27/21
  **/
-@Getter
-public abstract class Task {
-    private final String id, websiteURL;
-    private final OkHttpClient client;
+public interface Task extends Runnable {
 
-    private Headers.Builder headers = new Headers.Builder();
+    String getId();
 
-    public Task(String websiteURL) {
-        this.id = UUID.randomUUID().toString();
-        this.websiteURL = websiteURL;
+    String getWebsiteUrl();
 
-        this.client = new OkHttpClient.Builder().build();
+    void run();
+
+    boolean isStarted();
+
+    default void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (Exception e) {
+
+        }
     }
 
-    public abstract void run();
-
-    public void addHeader(String key, String value) {
-        headers.add(key, value);
-    }
-
-    public Headers getHeaders() {
-        return headers.build();
-    }
 }

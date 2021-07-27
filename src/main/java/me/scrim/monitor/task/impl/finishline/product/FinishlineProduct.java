@@ -2,6 +2,7 @@ package me.scrim.monitor.task.impl.finishline.product;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.scrim.monitor.product.Product;
 
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -13,14 +14,49 @@ import java.util.List;
  * @author Brennan
  * @since 7/27/2021
  **/
-@Getter
-public class FinishlineProduct {
+public class FinishlineProduct implements Product {
     private String productID, productName, productImage, price, color, productUrl;
 
+    @Getter
     private final List<Size> sizes = new LinkedList<>();
 
-    public String getStockX() {
-        return String.format("https://stockx.com/search?s=%s", URLEncoder.encode(getProductName() + " " + getColor(), Charset.defaultCharset()));
+    public int getTotalStock() {
+        int totalStock = 0;
+
+        for(Size size : sizes) {
+            totalStock += size.getStockAmount();
+        }
+
+        return totalStock;
+    }
+
+    public String getProductID() {
+        return productID;
+    }
+
+    @Override
+    public String getName() {
+        return productName;
+    }
+
+    @Override
+    public String getImage() {
+        return productImage;
+    }
+
+    @Override
+    public String getPrice() {
+        return price;
+    }
+
+    @Override
+    public String getColorWay() {
+        return color;
+    }
+
+    @Override
+    public String getUrl() {
+        return productUrl;
     }
 
     public void setProductUrl(String styleID, String colorID) {
@@ -41,9 +77,25 @@ public class FinishlineProduct {
         this.productName = name;
     }
 
-    public void setPrice(int price) {
-        this.price = NumberFormat.getCurrencyInstance().format(price);
+    public void setPrice(String price) {
+        if(price.length() == 5) {
+            String startPrice = price.substring(0, 3);
+            price = price.substring(3);
 
+            price = startPrice + "." + price;
+        } else if(price.length() == 4) {
+            String startPrice = price.substring(0, 2);
+            price = price.substring(2);
+
+            price = startPrice + "." + price;
+        } else if(price.length() == 3) {
+            String startPrice = price.substring(0, 1);
+            price = price.substring(1);
+
+            price = startPrice + "." + price;
+        }
+
+        this.price = price;
     }
 
     public void addSize(Size size) {

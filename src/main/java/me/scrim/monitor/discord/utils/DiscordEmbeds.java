@@ -18,22 +18,24 @@ public class DiscordEmbeds {
     public static void sendEmbeds(FinishlineProduct product, String url) {
         final WebhookEmbedBuilder embedBuilder = new WebhookEmbedBuilder();
 
-        embedBuilder.setTitle(new WebhookEmbed.EmbedTitle(product.getProductName(), product.getProductUrl()));
+        embedBuilder.setTitle(new WebhookEmbed.EmbedTitle(product.getName(), product.getUrl()));
         embedBuilder.setColor(new Color(0x348092).getRGB());
-        embedBuilder.setThumbnailUrl(product.getProductImage());
+        embedBuilder.setThumbnailUrl(product.getImage());
         embedBuilder.setTimestamp(Instant.now());
-        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("Powered By Glitch", ""));
+        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("Finishline Monitor Powered By Glitch", ""));
 
         embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Product ID", product.getProductID()));
         embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Price", "$" + product.getPrice()));
-        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Color", product.getColor()));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Color", product.getColorWay()));
 
+        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Total Loaded Stock", String.valueOf(product.getTotalStock())));
         for(FinishlineProduct.Size size : product.getSizes()) {
-            embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Size[" + size.getSize() + "]",
+            embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Size [" + size.getSize() + "]",
                     size.getSku() + " | " + size.getStockAmount()));
         }
 
-        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Useful Links", product.getStockX()));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Useful Links",
+                "[StockX](" +product.getStockX() + ") | [Goat](" + product.getGoat() + ")"));
 
         final WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
         webhookMessageBuilder.setUsername("GlitchMonitor");

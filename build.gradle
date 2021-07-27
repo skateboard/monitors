@@ -25,6 +25,7 @@ dependencies {
     shaded 'com.squareup.okhttp3:okhttp:+'
     shaded 'net.dv8tion:JDA:+'
     shaded 'io.sentry:sentry:+'
+    shaded 'io.lettuce:lettuce-core:6.1.4.RELEASE'
 
 
     shaded 'org.projectlombok:lombok:+'
