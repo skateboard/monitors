@@ -1,5 +1,7 @@
 package me.scrim.monitor.task.impl.finishline.product;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import me.scrim.monitor.product.Product;
@@ -28,6 +30,27 @@ public class FinishlineProduct implements Product {
         }
 
         return totalStock;
+    }
+
+    @Override
+    public JsonObject toJSON() {
+        final JsonObject productObject = Product.super.toJSON();
+
+        productObject.addProperty("product_id", getProductID());
+        productObject.addProperty("total_stock", getTotalStock());
+
+        final JsonArray jsonArray = new JsonArray();
+        for(Size size : getSizes()) {
+            jsonArray.add(size.toJSON());
+        }
+        productObject.add("sizes", jsonArray);
+
+        return productObject;
+    }
+
+    @Override
+    public String getSite() {
+        return "Finishline";
     }
 
     public String getProductID() {
@@ -112,6 +135,16 @@ public class FinishlineProduct implements Product {
             this.sku = sku;
             this.size = size;
             this.stockAmount = stockAmount;
+        }
+
+        public JsonObject toJSON() {
+            final JsonObject jsonObject = new JsonObject();
+
+            jsonObject.addProperty("sku", getSku());
+            jsonObject.addProperty("size", getSize());
+            jsonObject.addProperty("stock_amount", getStockAmount());
+
+            return jsonObject;
         }
     }
 }

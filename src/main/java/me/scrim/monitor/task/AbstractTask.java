@@ -2,6 +2,7 @@ package me.scrim.monitor.task;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.scrim.monitor.request.MyCookieJar;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 
@@ -16,7 +17,7 @@ public abstract class AbstractTask implements Task {
     private final OkHttpClient client;
 
     @Getter
-    public int continuousNoRestocks, continuousBans;
+    public int continuousBans, continuousNoUpdates;
 
     @Setter
     private boolean started;
@@ -27,7 +28,13 @@ public abstract class AbstractTask implements Task {
         this.id = UUID.randomUUID().toString();
         this.websiteURL = websiteURL;
 
-        this.client = new OkHttpClient.Builder().build();
+        this.client = new OkHttpClient.Builder()
+                .cookieJar(new MyCookieJar())
+                .build();
+    }
+
+    public MyCookieJar getCookieJar() {
+        return ((MyCookieJar) client.cookieJar());
     }
 
     @Override

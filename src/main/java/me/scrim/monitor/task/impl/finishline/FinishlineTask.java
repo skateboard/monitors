@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.sentry.Sentry;
 import io.sentry.SentryLevel;
+import me.scrim.monitor.ScrimMonitors;
 import me.scrim.monitor.discord.utils.DiscordEmbeds;
 import me.scrim.monitor.request.JsonReader;
 import me.scrim.monitor.task.AbstractTask;
@@ -55,20 +56,24 @@ public class FinishlineTask extends AbstractTask {
                 if(reloadProduct != null) {
                     reloadProduct.addSize(new FinishlineProduct.Size("s", "s", 4));
                     if(lastUpdateIndex != reloadProduct.getSizes().size()) {
-                        DiscordEmbeds.sendEmbeds(reloadProduct,
-                                "https://discord.com/api/webhooks/869519299998531585/IVsinhLZEsBK2BcIqWPF4eGiJmKtKaMNPGxxnW5t8-nH0h-Vuj7UFjaKYQCyn-fp3Aa3");
-                        //ScrimMonitors.INSTANCE.getRedis().sendWebhooks("hehe");
+                        continuousNoUpdates = 0;
+                        ScrimMonitors
+                                .INSTANCE
+                                .getRedis()
+                                .sendWebhooks(reloadProduct);
 
                         Sentry.setTag("type", "successful_webhooks");
-                        Sentry.captureMessage("Finishline [" + getId() + "] Successfully sent webhooks!", SentryLevel.INFO);
+                        Sentry
+                                .captureMessage("Finishline Task [" + getId() + "] Successfully sent webhooks!",
+                                        SentryLevel.INFO);
                     } else {
-                        continuousNoRestocks++;
+                        continuousNoUpdates++;
                     }
 
                     updateCache(reloadProduct);
                     reloadProduct = null;
 
-                    sleep(continuousNoRestocks > 7 ? 3000 : 500);
+                    sleep(continuousNoUpdates > 7 ? 3000 : 500);
                 }
             }
         }
@@ -88,7 +93,7 @@ public class FinishlineTask extends AbstractTask {
                     .build();
 
             try(Response response = getClient().newCall(request).execute()) {
-                int responseCode = response.code();
+                final int responseCode = response.code();
 
                 switch (responseCode) {
                     case 200 -> {
@@ -135,6 +140,11 @@ public class FinishlineTask extends AbstractTask {
                     }
                     case 400 -> {
 
+                    }
+                    case 499 -> {
+                        System.out.println("Product not loaded.");
+
+                        return findProduct();
                     }
                     case 403 -> {
                         continuousBans++;
