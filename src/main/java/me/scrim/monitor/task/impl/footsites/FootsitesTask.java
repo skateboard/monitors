@@ -10,7 +10,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 /**
  * @author Brennan
@@ -48,7 +51,7 @@ public class FootsitesTask extends AbstractTask {
         while (isStarted()) {
             reloadProductQueue = getProductQueue();
 
-            if(!reloadProductQueue.isEmpty()) {
+            if (!reloadProductQueue.isEmpty()) {
 
             }
 
@@ -70,7 +73,7 @@ public class FootsitesTask extends AbstractTask {
                     .get()
                     .build();
 
-            try(Response response = getClient().newCall(request).execute()) {
+            try (Response response = getClient().newCall(request).execute()) {
                 final int responseCode = response.code();
 
                 switch (responseCode) {
@@ -85,8 +88,8 @@ public class FootsitesTask extends AbstractTask {
 
                             final FootsiteProduct footsiteProduct = new FootsiteProduct(footsite, name, sku);
 
-                            if(sellableUnit.get("stockLevelStatus").getAsString().equalsIgnoreCase("inStock")) {
-                                if(footsiteProduct.getPrice() == null)
+                            if (sellableUnit.get("stockLevelStatus").getAsString().equalsIgnoreCase("inStock")) {
+                                if (footsiteProduct.getPrice() == null)
                                     footsiteProduct.setPrice(sellableUnit.getAsJsonObject("price").get("formattedValue").getAsString());
 
                                 final JsonArray attributes = sellableUnit.getAsJsonArray("attributes");
@@ -96,7 +99,7 @@ public class FootsitesTask extends AbstractTask {
                                     final JsonArray images = jsonObject.getAsJsonArray("images");
                                     for (int k = 0; k < images.size(); k++) {
                                         final String image = getImage(images.get(k).getAsJsonObject(), sellableUnit.get("code").getAsString());
-                                        if(image != null) {
+                                        if (image != null) {
                                             footsiteProduct.setImage(image);
                                             break;
                                         }
@@ -133,7 +136,7 @@ public class FootsitesTask extends AbstractTask {
                     .get()
                     .build();
 
-            try(Response response = getClient().newCall(request).execute()) {
+            try (Response response = getClient().newCall(request).execute()) {
                 final int responseCode = response.code();
 
                 switch (responseCode) {
@@ -147,8 +150,8 @@ public class FootsitesTask extends AbstractTask {
                         for (int i = 0; i < sellableUnits.size(); i++) {
                             final JsonObject sellableUnit = sellableUnits.get(i).getAsJsonObject();
 
-                            if(sellableUnit.get("stockLevelStatus").getAsString().equalsIgnoreCase("inStock")) {
-                                if(footsiteProduct.getPrice() == null) {
+                            if (sellableUnit.get("stockLevelStatus").getAsString().equalsIgnoreCase("inStock")) {
+                                if (footsiteProduct.getPrice() == null) {
                                     footsiteProduct.setPrice(sellableUnit.getAsJsonObject("price").get("formattedValue").getAsString());
                                 }
 
@@ -160,7 +163,7 @@ public class FootsitesTask extends AbstractTask {
                                     final JsonArray images = jsonObject.getAsJsonArray("images");
                                     for (int k = 0; k < images.size(); k++) {
                                         final String image = getImage(images.get(k).getAsJsonObject(), sellableUnit.get("code").getAsString());
-                                        if(image != null) {
+                                        if (image != null) {
                                             size.setImage(image);
                                             break;
                                         }
@@ -192,9 +195,30 @@ public class FootsitesTask extends AbstractTask {
         return null;
     }
 
+    /**
+     * @return What was updated since the last cache.
+     */
+    private List<FootsiteProduct> getUpdated() {
+        Queue<FootsiteProduct> productQueue = getProductQueue();
+        List<FootsiteProduct> cachedProducts;
+        List<FootsiteProduct> newProducts = null;
+
+        if (cachedProductQueue.size() != productQueue.size()) {
+            cachedProducts = new ArrayList<>(cachedProductQueue);
+
+            newProducts = productQueue.stream().filter(product -> !cachedProducts.contains(product)).collect(Collectors.toList());
+        }
+
+        if (newProducts != null) {
+            return newProducts;
+        }
+
+        return new ArrayList<>();
+    }
+
     private String getImage(JsonObject jsonObject, String code) {
 
-        if(jsonObject.get("code").getAsString().equals(code)) {
+        if (jsonObject.get("code").getAsString().equals(code)) {
             return jsonObject.getAsJsonArray("variations").get(1).getAsJsonObject().get("url").getAsString();
         }
 
@@ -208,7 +232,7 @@ public class FootsitesTask extends AbstractTask {
                     .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36")
                     .build();
 
-            try(Response response = getClient().newCall(request).execute()) {
+            try (Response response = getClient().newCall(request).execute()) {
                 final String title = response.body().string().split("<title>")[1].split("</title>")[0];
 
                 return !title.contains(".html");
