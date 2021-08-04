@@ -27,7 +27,6 @@ dependencies {
     shaded 'io.sentry:sentry:+'
     shaded 'io.lettuce:lettuce-core:6.1.4.RELEASE'
 
-
     shaded 'org.projectlombok:lombok:+'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }

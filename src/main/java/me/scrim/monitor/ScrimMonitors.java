@@ -3,18 +3,9 @@ package me.scrim.monitor;
 import io.sentry.Sentry;
 import lombok.Getter;
 import me.scrim.monitor.redis.Redis;
-import me.scrim.monitor.task.impl.finishline.FinishlineReleasesTask;
-import me.scrim.monitor.task.impl.finishline.FinishlineTask;
-import me.scrim.monitor.task.impl.footsites.Footsites;
-import me.scrim.monitor.task.impl.footsites.FootsitesQueueTask;
-import me.scrim.monitor.task.impl.footsites.FootsitesTask;
-import me.scrim.monitor.task.impl.footsites.impl.FootlockerTask;
-import me.scrim.monitor.task.impl.hibbett.HibbettTask;
-import me.scrim.monitor.task.impl.shopify.ShopifyInfoTask;
-import me.scrim.monitor.task.impl.shopify.ShopifyPasswordTask;
-import me.scrim.monitor.task.impl.stockx.StockXMonitor;
-import me.scrim.monitor.task.impl.stockx.StockXProduct;
-import me.scrim.monitor.task.impl.walmart.WalmartTask;
+import me.scrim.monitor.task.impl.amazon.AmazonTask;
+import me.scrim.monitor.task.impl.shopify.OldTask;
+import me.scrim.monitor.task.impl.shopify.newtask.ShopifyTask;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,9 +27,14 @@ public enum ScrimMonitors {
 
         this.redis = new Redis();
 
-        //6912010
-        final FootsitesTask footLocker = new FootlockerTask("6912010");
-        footLocker.run();
+        final AmazonTask amazonTask = new AmazonTask("B01N6YAVNM",
+                "9zEvVeQU6Ijm%2Ft5UVK7RCcnbgElgeqc9RInvmrDgVjKsaw4scYPzoNi7cIVPuQB%2FC6MHjFFr2Rfa4dHk7N6%2B0UXBSDGKTPYa%2Bn%2FLSln802%2BM3MxQrMnSva%2BKXqqGfpqbiDiIr5ytO%2Fl%2FtiESfmZM1w%3D%3D");
+        amazonTask.run();
+//       final ShopifyTask shopifyTask = new ShopifyTask("https://testmonitors.myshopify.com");
+//        shopifyTask.run();
+//        final OldTask oldTask = new OldTask("testmonitors.myshopify.com");
+//        oldTask.run();
+
 //        final WalmartTask walmartTask = new WalmartTask("36205314");
 //        walmartTask.run();
 //        final FinishlineTask task = new FinishlineTask("prod2798222", "White/Gym Red-Black");

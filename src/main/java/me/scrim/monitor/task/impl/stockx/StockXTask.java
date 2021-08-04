@@ -15,13 +15,13 @@ import java.util.Map;
  * @author Brennan
  * @since 8/2/21
  **/
-public class StockXMonitor extends AbstractTask {
+public class StockXTask extends AbstractTask {
     private StockXProduct cachedProduct;
     private StockXProduct reloadedProduct;
 
     private boolean notSet = false;
 
-    public StockXMonitor(String productName) {
+    public StockXTask(String productName) {
         super(String.format("https://stockx.com/api/products/%s?includes=market&currency=usd", productName));
 
         this.cachedProduct = getProduct();

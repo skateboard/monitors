@@ -1,4 +1,4 @@
-package me.scrim.monitor.task.impl.shopify;
+package me.scrim.monitor.task.impl.shopify.misc;
 
 import com.google.gson.JsonObject;
 import io.sentry.Sentry;

@@ -7,7 +7,7 @@ import me.scrim.monitor.ScrimMonitors;
 public class Main {
 
     public static void main(String[] args) {
-       ScrimMonitors.INSTANCE.start();
+      ScrimMonitors.INSTANCE.start();
     }
 
 }

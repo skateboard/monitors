@@ -4,6 +4,8 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import me.scrim.monitor.task.impl.amazon.AmazonProduct;
+import me.scrim.monitor.task.impl.amazon.AmazonTask;
 import me.scrim.monitor.task.impl.finishline.product.FinishlineProduct;
 import me.scrim.monitor.task.impl.finishline.product.FinishlineReleaseProduct;
 import me.scrim.monitor.task.impl.footsites.FootsiteProduct;
@@ -29,6 +31,36 @@ public class DiscordEmbeds {
 
     public static void sendFootsiteProduct(FootsiteProduct product, String webHookUrl) {
 
+    }
+
+    public static void sendAmazon(AmazonProduct product, String webHookUrl) {
+        final WebhookEmbedBuilder embedBuilder = new WebhookEmbedBuilder();
+
+        embedBuilder.setTitle(new WebhookEmbed.EmbedTitle(product.getName(), product.getUrl()));
+        embedBuilder.setColor(new Color(0x348092).getRGB());
+        embedBuilder.setTimestamp(Instant.now());
+        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("Amazon Monitor Powered By Glitch", ""));
+        embedBuilder.setThumbnailUrl(product.getImage());
+
+        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Product", product.getName()));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Price", product.getPrice()));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "ASIN", product.getAsin()));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Offer ID", String.format("```%s```", product.getOfferID())));
+
+        final StringBuilder usefulLinks = new StringBuilder();
+        usefulLinks.append(String.format("[StockX](%s)", product.getStockX())).append(" | ");
+        usefulLinks.append(String.format("[ATC](https://www.amazon.com/gp/aws/cart/add.html?ASIN.1=%s&Quantity.1=1)", product.getAsin())).append(" | ");
+        usefulLinks.append("[Cart](https://www.amazon.com/gp/cart/view.html)").append(" | ");
+        usefulLinks.append("[Checkout](https://www.amazon.com/gp/buy/spc/handlers/display)");
+
+        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Useful Links",
+                usefulLinks.toString()));
+
+        final WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
+        webhookMessageBuilder.setUsername("GlitchMonitors: Amazon");
+        webhookMessageBuilder.addEmbeds(embedBuilder.build());
+
+        WebhookClient.withUrl(webHookUrl).send(webhookMessageBuilder.build());
     }
 
     public static void sendStockXSize(StockXProduct product, StockXProduct.Size size, StockXProduct.Size oldSize, String webHookUrl) {

@@ -1,4 +1,4 @@
-package me.scrim.monitor.task.impl.shopify;
+package me.scrim.monitor.task.impl.shopify.misc;
 
 import io.sentry.Sentry;
 import io.sentry.SentryLevel;
