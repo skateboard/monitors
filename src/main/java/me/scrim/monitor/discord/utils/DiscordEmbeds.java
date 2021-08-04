@@ -4,16 +4,15 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
-import me.scrim.monitor.task.impl.amazon.AmazonProduct;
-import me.scrim.monitor.task.impl.amazon.AmazonTask;
-import me.scrim.monitor.task.impl.finishline.product.FinishlineProduct;
-import me.scrim.monitor.task.impl.finishline.product.FinishlineReleaseProduct;
-import me.scrim.monitor.task.impl.footsites.FootsiteProduct;
-import me.scrim.monitor.task.impl.footsites.Footsites;
+import me.scrim.monitor.task.impl.retail.amazon.AmazonProduct;
+import me.scrim.monitor.task.impl.retail.newegg.NewEggProduct;
+import me.scrim.monitor.task.impl.shoes.finishline.product.FinishlineProduct;
+import me.scrim.monitor.task.impl.shoes.finishline.product.FinishlineReleaseProduct;
+import me.scrim.monitor.task.impl.shoes.footsites.FootsiteProduct;
+import me.scrim.monitor.task.impl.shoes.footsites.Footsites;
 import me.scrim.monitor.task.impl.stockx.StockXProduct;
 
 import java.awt.*;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.TimeZone;
@@ -31,6 +30,33 @@ public class DiscordEmbeds {
 
     public static void sendFootsiteProduct(FootsiteProduct product, String webHookUrl) {
 
+    }
+
+    public static void sendNewEgg(NewEggProduct product, String webHookUrl) {
+        final WebhookEmbedBuilder embedBuilder = new WebhookEmbedBuilder();
+
+        embedBuilder.setTitle(new WebhookEmbed.EmbedTitle(product.getName(), product.getUrl()));
+        embedBuilder.setColor(new Color(0x348092).getRGB());
+        embedBuilder.setTimestamp(Instant.now());
+        embedBuilder.setFooter(new WebhookEmbed.EmbedFooter("NewEgg Monitor Powered By Glitch", ""));
+        embedBuilder.setThumbnailUrl(product.getImage());
+
+        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Product", product.getName()));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "Price", product.getPrice()));
+        embedBuilder.addField(new WebhookEmbed.EmbedField(true, "SKU", product.getSku()));
+
+        final StringBuilder usefulLinks = new StringBuilder();
+        usefulLinks.append(String.format("[StockX](%s)", product.getStockX())).append(" | ");
+        usefulLinks.append("[Cart](https://www.secure.newegg.com/shop/cart)");
+
+        embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Useful Links",
+                usefulLinks.toString()));
+
+        final WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
+        webhookMessageBuilder.setUsername("GlitchMonitors: NewEgg");
+        webhookMessageBuilder.addEmbeds(embedBuilder.build());
+
+        WebhookClient.withUrl(webHookUrl).send(webhookMessageBuilder.build());
     }
 
     public static void sendAmazon(AmazonProduct product, String webHookUrl) {

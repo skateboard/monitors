@@ -8,10 +8,9 @@ import io.lettuce.core.pubsub.RedisPubSubAdapter;
 import io.lettuce.core.pubsub.RedisPubSubListener;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.pubsub.api.sync.RedisPubSubCommands;
-import io.sentry.Sentry;
 import lombok.Getter;
 import me.scrim.monitor.product.Product;
-import me.scrim.monitor.task.impl.footsites.Footsites;
+import me.scrim.monitor.task.impl.shoes.footsites.Footsites;
 
 /**
  * @author Brennan

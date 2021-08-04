@@ -3,9 +3,9 @@ package me.scrim.monitor;
 import io.sentry.Sentry;
 import lombok.Getter;
 import me.scrim.monitor.redis.Redis;
-import me.scrim.monitor.task.impl.amazon.AmazonTask;
-import me.scrim.monitor.task.impl.shopify.OldTask;
-import me.scrim.monitor.task.impl.shopify.newtask.ShopifyTask;
+import me.scrim.monitor.task.impl.retail.bestbuy.BestBuyTask;
+import me.scrim.monitor.task.impl.retail.newegg.NewEggProduct;
+import me.scrim.monitor.task.impl.retail.newegg.NewEggTask;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,9 +27,9 @@ public enum ScrimMonitors {
 
         this.redis = new Redis();
 
-        final AmazonTask amazonTask = new AmazonTask("B01N6YAVNM",
-                "9zEvVeQU6Ijm%2Ft5UVK7RCcnbgElgeqc9RInvmrDgVjKsaw4scYPzoNi7cIVPuQB%2FC6MHjFFr2Rfa4dHk7N6%2B0UXBSDGKTPYa%2Bn%2FLSln802%2BM3MxQrMnSva%2BKXqqGfpqbiDiIr5ytO%2Fl%2FtiESfmZM1w%3D%3D");
-        amazonTask.run();
+        final BestBuyTask bestBuyTask = new BestBuyTask("3720002");
+        bestBuyTask.run();
+
 //       final ShopifyTask shopifyTask = new ShopifyTask("https://testmonitors.myshopify.com");
 //        shopifyTask.run();
 //        final OldTask oldTask = new OldTask("testmonitors.myshopify.com");

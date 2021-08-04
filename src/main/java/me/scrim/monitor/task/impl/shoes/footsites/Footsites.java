@@ -1,4 +1,4 @@
-package me.scrim.monitor.task.impl.footsites;
+package me.scrim.monitor.task.impl.shoes.footsites;
 
 /**
  * @author Brennan

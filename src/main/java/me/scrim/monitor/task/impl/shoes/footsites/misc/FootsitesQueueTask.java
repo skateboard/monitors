@@ -1,10 +1,10 @@
-package me.scrim.monitor.task.impl.footsites;
+package me.scrim.monitor.task.impl.shoes.footsites.misc;
 
 import io.sentry.Sentry;
 import io.sentry.SentryLevel;
 import me.scrim.monitor.ScrimMonitors;
-import me.scrim.monitor.discord.utils.DiscordEmbeds;
 import me.scrim.monitor.task.AbstractTask;
+import me.scrim.monitor.task.impl.shoes.footsites.Footsites;
 import okhttp3.Request;
 import okhttp3.Response;
 

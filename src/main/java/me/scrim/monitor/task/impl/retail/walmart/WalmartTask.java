@@ -1,14 +1,13 @@
-package me.scrim.monitor.task.impl.walmart;
+package me.scrim.monitor.task.impl.retail.walmart;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.sentry.Sentry;
 import io.sentry.SentryLevel;
 import me.scrim.monitor.request.JsonReader;
 import me.scrim.monitor.task.AbstractTask;
-import me.scrim.monitor.task.impl.walmart.product.WalmartOfferProduct;
-import me.scrim.monitor.task.impl.walmart.product.WalmartProduct;
+import me.scrim.monitor.task.impl.retail.walmart.product.WalmartOfferProduct;
+import me.scrim.monitor.task.impl.retail.walmart.product.WalmartProduct;
 import okhttp3.Request;
 import okhttp3.Response;
 

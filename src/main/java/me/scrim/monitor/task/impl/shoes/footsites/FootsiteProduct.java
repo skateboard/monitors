@@ -1,6 +1,5 @@
-package me.scrim.monitor.task.impl.footsites;
+package me.scrim.monitor.task.impl.shoes.footsites;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import me.scrim.monitor.product.Product;

@@ -1,4 +1,4 @@
-package me.scrim.monitor.task.impl.amazon;
+package me.scrim.monitor.task.impl.retail.amazon;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

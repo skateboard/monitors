@@ -1,4 +1,4 @@
-package me.scrim.monitor.task.impl.finishline.product;
+package me.scrim.monitor.task.impl.shoes.finishline.product;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import me.scrim.monitor.product.Product;
 
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 

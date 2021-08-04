@@ -1,10 +1,7 @@
-package me.scrim.monitor.task.impl.walmart.product;
+package me.scrim.monitor.task.impl.retail.walmart.product;
 
-import com.google.gson.JsonObject;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import me.scrim.monitor.product.Product;
 
 import java.util.LinkedList;
 import java.util.List;

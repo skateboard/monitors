@@ -1,4 +1,4 @@
-package me.scrim.monitor.task.impl.finishline;
+package me.scrim.monitor.task.impl.shoes.finishline;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -8,18 +8,13 @@ import me.scrim.monitor.ScrimMonitors;
 import me.scrim.monitor.discord.utils.DiscordEmbeds;
 import me.scrim.monitor.request.JsonReader;
 import me.scrim.monitor.task.AbstractTask;
-import me.scrim.monitor.task.Task;
-import me.scrim.monitor.task.impl.finishline.product.FinishlineReleaseProduct;
+import me.scrim.monitor.task.impl.shoes.finishline.product.FinishlineReleaseProduct;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * @author Brennan

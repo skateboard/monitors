@@ -1,4 +1,4 @@
-package me.scrim.monitor.task.impl.finishline.product;
+package me.scrim.monitor.task.impl.shoes.finishline.product;
 
 import me.scrim.monitor.product.Product;
 

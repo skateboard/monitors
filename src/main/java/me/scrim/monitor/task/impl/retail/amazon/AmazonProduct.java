@@ -1,4 +1,4 @@
-package me.scrim.monitor.task.impl.amazon;
+package me.scrim.monitor.task.impl.retail.amazon;
 
 import lombok.Getter;
 import lombok.Setter;

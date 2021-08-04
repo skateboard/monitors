@@ -1,9 +1,7 @@
-package me.scrim.monitor.task.impl.hibbett;
+package me.scrim.monitor.task.impl.shoes.hibbett;
 
 import com.google.gson.JsonObject;
-import me.scrim.monitor.request.JsonReader;
 import me.scrim.monitor.task.AbstractTask;
-import okhttp3.Cookie;
 import okhttp3.Request;
 import okhttp3.Response;
 

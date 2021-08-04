@@ -1,11 +1,9 @@
-package me.scrim.monitor.task.impl.footsites;
+package me.scrim.monitor.task.impl.shoes.footsites;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.scrim.monitor.request.JsonReader;
 import me.scrim.monitor.task.AbstractTask;
-import me.scrim.monitor.task.impl.footsites.FootsiteProduct;
-import me.scrim.monitor.task.impl.footsites.Footsites;
 import okhttp3.Request;
 import okhttp3.Response;
 

@@ -1,4 +1,4 @@
-package me.scrim.monitor.task.impl.walmart.product;
+package me.scrim.monitor.task.impl.retail.walmart.product;
 
 import com.google.gson.JsonObject;
 import lombok.Getter;
