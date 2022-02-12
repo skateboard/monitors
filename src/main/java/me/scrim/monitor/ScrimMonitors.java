@@ -45,7 +45,7 @@ public enum ScrimMonitors {
 
     private void initializeSentry() {
         Sentry.init(options -> {
-            options.setDsn("https://af01435b271c424b846a93e91b42bd61@o663814.ingest.sentry.io/5880931");
+            options.setDsn("");
             options.setTracesSampleRate(1.0);
             options.setDebug(true);
             options.setEnvironment(System.getenv("debug").equalsIgnoreCase("true") ? "debug" : "environment");
