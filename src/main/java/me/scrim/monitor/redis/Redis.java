@@ -22,7 +22,7 @@ public class Redis {
     private final RedisCommands<String, String> information;
 
     public Redis() {
-        final RedisClient redisClient = RedisClient.create("redis://AuthPanelRedis1234@45.63.56.247:6379/0");
+        final RedisClient redisClient = RedisClient.create("");
         final StatefulRedisPubSubConnection<String, String> subConnection = redisClient.connectPubSub();
 
         final StatefulRedisConnection<String, String> informationConnection = redisClient.connect();
